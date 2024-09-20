@@ -1,0 +1,38 @@
+# Python virtual environment
+venv/
+env/
+*.pyc
+__pycache__/
+
+# Database
+data/calendar.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python cache
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+
+# Log files
+*.log
+
+# Custom settings file (if you decide to exclude it)
+# custom_settings.json

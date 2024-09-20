@@ -1,0 +1,16 @@
+[
+    {
+      "title": "Team Meeting",
+      "date": "2024-09-15",
+      "description": "Weekly team sync-up",
+      "url": "https://meet.google.com/abc-defg-hij",
+        "location": "Online"
+    },
+    {
+      "title": "Project Deadline",
+      "date": "2024-10-30",
+      "description": "Final submission for Q2 project",
+      "url": "",
+        "location": "London"
+    }
+  ]
