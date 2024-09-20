@@ -29,7 +29,23 @@ styles = Style("""
     }
 """)
 
-app, rt = fast_app(pico=True, hdrs=(
+def load_custom_settings(filename='custom_settings.json'):
+    default_settings = {
+        "title": "Calendar App",
+        "logo_url": None,
+        "about_content": "This is a calendar application."
+    }
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            custom_settings = json.load(f)
+        default_settings.update(custom_settings)
+    return default_settings
+
+
+custom_settings = load_custom_settings()
+
+app, rt = fast_app(pico=True,
+                   hdrs=(
     MarkdownJS(),
     HighlightJS(langs=['python', 'javascript', 'html', 'css']),
     styles
@@ -96,20 +112,6 @@ def generate_rss_feed():
 
     return fg.rss_str(pretty=True)
 
-def load_custom_settings(filename='custom_settings.json'):
-    default_settings = {
-        "title": "Calendar App",
-        "logo_url": None,
-        "about_content": "This is a calendar application."
-    }
-    if os.path.exists(filename):
-        with open(filename, 'r') as f:
-            custom_settings = json.load(f)
-        default_settings.update(custom_settings)
-    return default_settings
-
-
-custom_settings = load_custom_settings()
 
 logo_url = "/static/logo.png"
 if os.path.exists(f".{logo_url}"):  # Check if the file exists in the static directory
@@ -216,24 +218,22 @@ def show_main_layout(year, month, active_locations, view='calendar', event_id=No
         id="calendar-container"
     )
     
-    # Create an empty DialogX for event details
-    event_dialog = DialogX(
+    event_dialog = Container(
         Div(id="event-dialog-content"),
         header=Div(Button("×", aria_label="Close", _="on click hide #event-dialog")),
         footer=Div(Button("Close", cls="secondary", _="on click hide #event-dialog")),
         id="event-dialog"
     )
 
-    # Create an empty DialogX for about content
-    about_dialog = DialogX(
+    about_dialog = Container(
         Div(id="about-dialog-content", cls="marked"),
         header=Div(Button("×", aria_label="Close", _="on click hide #about-dialog")),
         footer=Div(Button("Close", cls="secondary", _="on click hide #about-dialog")),
         id="about-dialog"
     )
 
-    return Container(
-        Div(
+    return (Title(custom_settings['title']),
+            Container(
             Style("""
                 .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
                 .calendar-nav h2 { margin: 0; }
@@ -265,7 +265,7 @@ def get(req):
     today = datetime.now()
     active_locations = set(req.query_params.get('locations', 'London+Online').replace('+', ' ').split())
     view = req.query_params.get('view', 'calendar')
-    return Container(show_main_layout(today.year, today.month, active_locations, view))
+    return (Title(custom_settings['title']), Container(show_main_layout(today.year, today.month, active_locations, view)))
 
 
 
@@ -276,9 +276,10 @@ def get():
 
 @rt("/about")
 def get():
-    return Container(
+    return  (Title('About ' + custom_settings['title']), 
+             Container(
         logo_title_container, Div(custom_settings['about_content'], cls="marked")
-    )
+    ))
 
 @rt("/calendar_content/{year}/{month}")
 def get(year: int, month: int, view: str = 'calendar', direction: str = None, locations: str = 'London+Online'):
@@ -346,7 +347,8 @@ def get_calendar_content(year, month, view, cal, month_events, active_locations)
 def get(id: int):
     event = events[id]
     event_url = A("Event Link", href=event.url, target="_blank") if event.url else ""
-    return Container(
+    return (Title(event.title),
+            Container(
         logo_title_container,
         Article(
             H3(event.title),
@@ -355,15 +357,8 @@ def get(id: int):
             P(event.description),
             event_url
         )
-    )
+    ))
 
 
-# Add a debug route to check the contents of the database
-@rt("/debug/events")
-def get():
-    all_events = events()
-    return Titled("Debug: All Events", 
-        Ul(*[Li(f"{e.title} on {e.date}") for e in all_events])
-    )
 
 serve()
