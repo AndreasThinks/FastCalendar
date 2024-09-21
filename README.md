@@ -4,6 +4,8 @@ This is a web-based calendar application built with FastHTML, providing an inter
 
 It is primarily intended to be deployed directly from a Github repository, allowing event submission via PR.
 
+A live version can be viewed at https://tech-for-good.events/
+
 ## Features
 
 - Interactive calendar view with month navigation
