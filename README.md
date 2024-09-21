@@ -1,6 +1,8 @@
-# Awesome Calendar Application
+# FastCalendar
 
 This is a web-based calendar application built with FastHTML, providing an interactive and customizable event viewing experience.
+
+It is primarily intended to be deployed directly from a Github repository, allowing event submission via PR.
 
 ## Features
 
@@ -8,7 +10,9 @@ This is a web-based calendar application built with FastHTML, providing an inter
 - Agenda view for upcoming events
 - Location-based event filtering
 - RSS feed for event subscriptions
-- Customizable title and logo
+- Customizable title and about section
+- Social media links integration
+- Static logo display
 - About section with markdown support
 
 ## Prerequisites
@@ -38,8 +42,13 @@ This is a web-based calendar application built with FastHTML, providing an inter
    ```json
    {
      "title": "My Awesome Calendar",
-     "logo_url": "/path/to/your/logo.png",
-     "about_content": "# About\n\nThis is my awesome calendar application."
+     "about_content": "# About\n\nThis is my awesome calendar application.",
+     "website_url": "https://example.com",
+     "github_url": "https://github.com/your-username/awesome-calendar",
+     "social_links": [
+       {"name": "RSS", "url": "/rss", "icon": "rss"},
+       {"name": "Discord", "url": "https://discord.gg/your-server", "icon": "discord-logo"}
+     ]
    }
    ```
 
@@ -65,6 +74,8 @@ This is a web-based calendar application built with FastHTML, providing an inter
    ]
    ```
 
+6. Add your logo image file (e.g., `logo.png`) to the `static` folder in the project root.
+
 ## Usage
 
 1. Run the application:
@@ -78,12 +89,13 @@ This is a web-based calendar application built with FastHTML, providing an inter
 
 4. Click on events to view details.
 
-5. Use the RSS feed button to subscribe to upcoming events.
+5. Use the social media buttons in the footer to access linked platforms or subscribe to the RSS feed.
 
 ## Customization
 
-- Modify the `custom_settings.json` file to change the application title, logo, and about content.
+- Modify the `custom_settings.json` file to change the application title, about content, website URL, GitHub URL, and social media links.
 - Edit the `events.json` file to add, remove, or modify events.
+- Replace the `logo.png` file in the `static` folder to change the application logo.
 
 ## Contributing
 

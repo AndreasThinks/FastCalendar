@@ -26,20 +26,68 @@ styles = Style("""
     }
     .logo-title-container a {
         text-decoration: none;
+    }        .social-button {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        .social-button:hover {
+            color: var(--primary-hover);
+        }
+        .social-buttons-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+                   .social-button {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: var(--primary);
+    }
+    .social-button:hover {
+        color: var(--primary-hover);
+    }
+    .social-buttons-container {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    .powered-by-text {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+    .powered-by-text a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+    .powered-by-text a:hover {
+        text-decoration: underline;
     }
 """)
 
 def load_custom_settings(filename='custom_settings.json'):
     default_settings = {
         "title": "Calendar App",
-        "logo_url": None,
-        "about_content": "This is a calendar application."
+        "about_content": "This is a calendar application.",
+        "website_url": "https://example.com",
+        "github_url": "https://github.com/your-repo/path-to-create-pr",
+        "social_links": []
     }
     if os.path.exists(filename):
         with open(filename, 'r') as f:
             custom_settings = json.load(f)
         default_settings.update(custom_settings)
     return default_settings
+
+custom_settings = load_custom_settings()
 
 
 custom_settings = load_custom_settings()
@@ -48,6 +96,7 @@ app, rt = fast_app(pico=True,
                    hdrs=(
     MarkdownJS(),
     HighlightJS(langs=['python', 'javascript', 'html', 'css']),
+    Script(src="https://unpkg.com/@phosphor-icons/web"),
     styles
 ))
 # Load events from JSON file
@@ -100,14 +149,14 @@ def generate_rss_feed():
     fg = FeedGenerator()
     fg.title('Calendar Events')
     fg.description('Upcoming events from our calendar')
-    fg.link(href='http://example.com')
+    fg.link(href=custom_settings['website_url'])
 
     upcoming_events = get_upcoming_events(days=30)
     for event in upcoming_events:
         fe = fg.add_entry()
         fe.title(event.title)
         fe.description(event.description)
-        fe.link(href=f'http://example.com/event/{event.id}')
+        fe.link(href=f"{custom_settings['website_url']}/event/{event.id}")
         fe.pubDate(datetime.strptime(event.date, '%Y-%m-%d'))
 
     return fg.rss_str(pretty=True)
@@ -127,6 +176,40 @@ logo_title_container = A(
     cls="logo-title-container",
     href="/"  # Link to the home page
 )
+
+def create_footer():
+    # Add event button (redirects to GitHub)
+    add_button = A("Add Event", 
+                   href=custom_settings['github_url'], 
+                   target="_blank",
+                   role="button")
+
+    # About button
+    about_button = A("About", href="/about", role="button", cls="outline")
+
+    # Create social buttons
+    social_buttons = Div(
+        *[A(I(cls=f"ph ph-{link['icon']}"), 
+            href=link['url'], 
+            target="_blank" if link['url'].startswith('http') else "_self", 
+            role="button", 
+            cls="social-button",
+            title=link['name'])
+          for link in custom_settings['social_links']],
+        cls="social-buttons-container"
+    )
+
+    footer_buttons = Div(add_button, about_button, social_buttons, cls="button-container")
+
+    # Add "Powered by FastCalendar" text
+    powered_by = P(
+        "Powered by ",
+        A("FastCalendar", href="https://github.com/your-username/fastcalendar", target="_blank"),
+        cls="powered-by-text"
+    )
+
+    return Div(footer_buttons, powered_by, cls="footer-container")
+
 
 def get_all_locations():
     return list(set(event.location for event in events()))
@@ -196,25 +279,11 @@ def show_main_layout(year, month, active_locations, view='calendar', event_id=No
     month_events = get_events_for_month(year, month, active_locations)
     content = get_calendar_content(year, month, view, cal, month_events, active_locations)
 
-    # Add event button (redirects to GitHub)
-    add_button = A("Add Event", 
-                   href="https://github.com/your-repo/path-to-create-pr", 
-                   target="_blank",
-                   role="button")
-
-    # RSS feed button
-    rss_button = A("RSS Feed", href="/rss", target="_blank", role="button", cls="outline")
-
-    # About button
-    about_button = A("About", href="/about", role="button", cls="outline")
-
-    footer_buttons = Div(add_button, rss_button, about_button, cls="button-container")
-
     calendar_container = Div(
         logo_title_container,  # Add logo and title container here
         header,
         content,
-        footer_buttons,
+        create_footer(),
         id="calendar-container"
     )
     
@@ -276,9 +345,11 @@ def get():
 
 @rt("/about")
 def get():
-    return  (Title('About ' + custom_settings['title']), 
+    return (Title('About ' + custom_settings['title']), 
              Container(
-        logo_title_container, Div(custom_settings['about_content'], cls="marked")
+        logo_title_container,
+        Div(custom_settings['about_content'], cls="marked"),
+        create_footer()  # Add the footer here
     ))
 
 @rt("/calendar_content/{year}/{month}")
@@ -356,7 +427,8 @@ def get(id: int):
             P(f"Location: {event.location}"),
             P(event.description),
             event_url
-        )
+        ),
+        create_footer()  # Add the footer here
     ))
 
 
