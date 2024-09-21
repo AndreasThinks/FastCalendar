@@ -1,7 +1,6 @@
 from fasthtml.common import *
 from datetime import datetime, timedelta
 import calendar
-import json
 import os
 import logging
 import yaml
@@ -225,13 +224,16 @@ def get_events_for_month(year, month, locations=None):
         month_events = [e for e in month_events if e.location in locations]
     return month_events
 
-def get_upcoming_events(days=30, locations=None):
-    today = datetime.now().date()
-    end_date = today + timedelta(days=days)
-    upcoming = events(f"date >= '{today}' AND date <= '{end_date}'")
+def get_upcoming_events(start_date=None, end_date=None, locations=None):
+    if start_date is None:
+        start_date = datetime.now().date()
+    if end_date is None:
+        end_date = start_date + timedelta(days=30)
+    
+    upcoming = events(f"date >= '{start_date}' AND date <= '{end_date}'")
     if locations:
         upcoming = [e for e in upcoming if e.location in locations]
-    return upcoming
+    return sorted(upcoming, key=lambda e: e.date)  # Sort events by date
 
 def show_main_layout(year, month, active_locations, view='calendar', event_id=None):
     if event_id:
@@ -415,13 +417,15 @@ def get_calendar_content(year, month, view, cal, month_events, active_locations)
             cls="calendar-table"
         )
     else:  # Agenda view
-        upcoming_events = get_upcoming_events(locations=active_locations)
+        start_date = datetime(year, month, 1).date()
+        end_date = (start_date.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+        upcoming_events = get_upcoming_events(start_date=start_date, end_date=end_date, locations=active_locations)
         return Ul(*[
             Li(
                 H4(e.date),
                 A(f"{e.title} ({e.location})", 
                   href=f"/event/{e.id}")
-            ) for e in upcoming_events if e.location in active_locations
+            ) for e in upcoming_events
         ], cls="agenda-list")
 
 @rt("/event/{id}")

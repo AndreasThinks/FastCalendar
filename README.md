@@ -30,7 +30,7 @@ It is primarily intended to be deployed directly from a Github repository, allow
 
 2. Create and activate a virtual environment:
    ```
-   uv init
+   uv venv --python 3.11
    ```
 
 3. Install the required packages:
