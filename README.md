@@ -13,7 +13,7 @@ It is primarily intended to be deployed directly from a Github repository, allow
 - Customizable title and about section
 - Social media links integration
 - Static logo display
-- About section with markdown support
+- Markdown support for event descriptions and about section
 
 ## Prerequisites
 
@@ -38,40 +38,61 @@ It is primarily intended to be deployed directly from a Github repository, allow
    uv sync
    ```
 
-4. Create a `custom_settings.json` file in the project root with the following structure:
-   ```json
-   {
-     "title": "My Awesome Calendar",
-     "about_content": "# About\n\nThis is my awesome calendar application.",
-     "website_url": "https://example.com",
-     "github_url": "https://github.com/your-username/awesome-calendar",
-     "social_links": [
-       {"name": "RSS", "url": "/rss", "icon": "rss"},
-       {"name": "Discord", "url": "https://discord.gg/your-server", "icon": "discord-logo"}
-     ]
-   }
+4. Create a `custom_settings.yaml` file in the project root with the following structure:
+   ```yaml
+   title: My Awesome Calendar
+   about_content: |
+     # About
+
+     This is my awesome calendar application.
+
+     ## Features
+     - Easy to use
+     - Customizable
+     - Markdown support
+   website_url: https://example.com
+   github_url: https://github.com/your-username/awesome-calendar
+   default_locations:
+     - Online
+     - London
+   social_links:
+     - name: RSS
+       url: /rss
+       icon: rss-simple
+     - name: Discord
+       url: https://discord.gg/your-server
+       icon: discord-logo
    ```
 
-5. Create an `events.json` file in the project root to populate your calendar with events:
-   ```json
-   [
-     {
-       "id": 1,
-       "title": "Team Meeting",
-       "date": "2024-09-15",
-       "description": "Weekly team sync-up",
-       "url": "https://meet.google.com/abc-defg-hij",
-       "location": "Online"
-     },
-     {
-       "id": 2,
-       "title": "Project Deadline",
-       "date": "2024-09-30",
-       "description": "Final submission for Q3 project",
-       "url": "",
-       "location": "London"
-     }
-   ]
+5. Create an `events.yaml` file in the project root to populate your calendar with events:
+   ```yaml
+   - id: 1
+     title: Team Meeting
+     date: 2024-09-15
+     description: |
+       # Weekly Team Sync-up
+
+       ## Agenda
+       - Project updates
+       - Upcoming deadlines
+       - Q&A session
+
+       Join us at [Google Meet](https://meet.google.com/abc-defg-hij)
+     url: https://meet.google.com/abc-defg-hij
+     location: Online
+
+   - id: 2
+     title: Project Deadline
+     date: 2024-09-30
+     description: |
+       **Final submission for Q3 project**
+
+       Make sure to:
+       - Complete all deliverables
+       - Review documentation
+       - Prepare presentation slides
+     url: ""
+     location: London
    ```
 
 6. Add your logo image file (e.g., `logo.png`) to the `static` folder in the project root.
@@ -87,14 +108,14 @@ It is primarily intended to be deployed directly from a Github repository, allow
 
 3. Use the calendar view to browse events, switch to the agenda view, or filter events by location.
 
-4. Click on events to view details.
+4. Click on events to view details. Event descriptions support Markdown formatting.
 
 5. Use the social media buttons in the footer to access linked platforms or subscribe to the RSS feed.
 
 ## Customization
 
-- Modify the `custom_settings.json` file to change the application title, about content, website URL, GitHub URL, and social media links.
-- Edit the `events.json` file to add, remove, or modify events.
+- Modify the `custom_settings.yaml` file to change the application title, about content, website URL, GitHub URL, default locations, and social media links.
+- Edit the `events.yaml` file to add, remove, or modify events. Event descriptions support Markdown formatting.
 - Replace the `logo.png` file in the `static` folder to change the application logo.
 
 ## Contributing
