@@ -206,7 +206,7 @@ def create_footer():
     # Add "Powered by FastCalendar" text
     powered_by = P(
         "Powered by ",
-        A("FastCalendar", href="https://github.com/your-username/fastcalendar", target="_blank"),
+        A("FastCalendar", href="https://github.com/AndreasThinks/FastCalendar", target="_blank"),
         cls="powered-by-text"
     )
 
