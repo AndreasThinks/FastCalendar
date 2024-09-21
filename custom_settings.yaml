@@ -1,0 +1,27 @@
+title: FastCalendar
+about_content: |
+
+  This is a **calendar application** designed to help you keep track of important events and meetings.
+
+  ## Features:
+  - Easy-to-use interface
+  - Multiple view options (calendar and agenda)
+  - Location filtering
+  - RSS feed support
+
+  For more information, visit our [GitHub repository](https://github.com/your-repo/calendar-app).
+website_url: https://example.com
+github_url: https://github.com/your-repo/path-to-create-pr
+default_locations:
+  - Online
+  - London
+social_links:
+  - name: Twitter
+    icon: twitter-logo
+    url: https://twitter.com/your_account
+  - name: GitHub
+    icon: github-logo
+    url: https://github.com/your_account
+  - name: RSS Feed
+    icon: rss-simple
+    url: /rss

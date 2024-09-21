@@ -220,12 +220,14 @@ source = { virtual = "." }
 dependencies = [
     { name = "feedgen" },
     { name = "python-fasthtml" },
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "feedgen", specifier = ">=1.0.0" },
     { name = "python-fasthtml", specifier = ">=0.6.4" },
+    { name = "pyyaml", specifier = ">=6.0.2" },
 ]
 
 [[package]]

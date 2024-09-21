@@ -4,6 +4,7 @@ import calendar
 import json
 import os
 import logging
+import yaml
 from feedgen.feed import FeedGenerator
 from starlette.responses import Response
 
@@ -73,17 +74,18 @@ styles = Style("""
     }
 """)
 
-def load_custom_settings(filename='custom_settings.json'):
+def load_custom_settings(filename='custom_settings.yaml'):
     default_settings = {
         "title": "Calendar App",
         "about_content": "This is a calendar application.",
         "website_url": "https://example.com",
         "github_url": "https://github.com/your-repo/path-to-create-pr",
-        "social_links": []
+        "social_links": [],
+        "default_locations": ["Online", "London"]  # Add this line
     }
     if os.path.exists(filename):
         with open(filename, 'r') as f:
-            custom_settings = json.load(f)
+            custom_settings = yaml.safe_load(f)
         default_settings.update(custom_settings)
     return default_settings
 
@@ -99,13 +101,6 @@ app, rt = fast_app(pico=True,
     Script(src="https://unpkg.com/@phosphor-icons/web"),
     styles
 ))
-# Load events from JSON file
-def load_events_from_json(filename='events.json'):
-    if os.path.exists(filename):
-        with open(filename, 'r') as f:
-            return json.load(f)
-    logger.warning(f"Events file {filename} not found.")
-    return []
 
 
 db = database('data/calendar.db')
@@ -115,14 +110,22 @@ if events not in db.t:
 Event = events.dataclass()
 
 
-# Update database with events from JSON file
-def update_db_from_json():
-    json_events = load_events_from_json()
-    if not json_events:
-        logger.warning("No events found in JSON file.")
+# Replace the load_events_from_json function
+def load_events_from_yaml(filename='events.yaml'):
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            return yaml.safe_load(f)
+    logger.warning(f"Events file {filename} not found.")
+    return []
+
+# Update the update_db_from_json function to use YAML
+def update_db_from_yaml():
+    yaml_events = load_events_from_yaml()
+    if not yaml_events:
+        logger.warning("No events found in YAML file.")
         return
 
-    for event in json_events:
+    for event in yaml_events:
         existing = events(f"title='{event['title']}' AND date='{event['date']}'")
         if not existing:
             try:
@@ -135,8 +138,8 @@ def update_db_from_json():
     total_events = len(events())
     logger.info(f"Total events in database after update: {total_events}")
 
-# Run this function at startup to update the database
-update_db_from_json()
+# Update the call to this function
+update_db_from_yaml()
 
 # Helper functions
 def get_month_calendar(year, month):
@@ -332,10 +335,10 @@ def show_main_layout(year, month, active_locations, view='calendar', event_id=No
 @rt("/")
 def get(req):
     today = datetime.now()
-    active_locations = set(req.query_params.get('locations', 'London+Online').replace('+', ' ').split())
+    default_locations = '+'.join(custom_settings.get('default_locations', ['Online', 'London']))
+    active_locations = set(req.query_params.get('locations', default_locations).replace('+', ' ').split())
     view = req.query_params.get('view', 'calendar')
     return (Title(custom_settings['title']), Container(show_main_layout(today.year, today.month, active_locations, view)))
-
 
 
 @rt("/rss")
@@ -348,12 +351,15 @@ def get():
     return (Title('About ' + custom_settings['title']), 
              Container(
         logo_title_container,
-        Div(custom_settings['about_content'], cls="marked"),
-        create_footer()  # Add the footer here
+        Div(custom_settings['about_content'], cls="marked"),  # Add the "marked" class to render as Markdown
+        create_footer()
     ))
 
 @rt("/calendar_content/{year}/{month}")
-def get(year: int, month: int, view: str = 'calendar', direction: str = None, locations: str = 'London+Online'):
+def get(year: int, month: int, view: str = 'calendar', direction: str = None, locations: str = None):
+    if locations is None:
+        default_locations = '+'.join(custom_settings.get('default_locations', ['Online', 'London']))
+        locations = default_locations
     active_locations = set(locations.replace('+', ' ').split())
     if direction == 'prev':
         date = datetime(year, month, 1) - timedelta(days=1)
@@ -364,8 +370,12 @@ def get(year: int, month: int, view: str = 'calendar', direction: str = None, lo
 
     return show_main_layout(year, month, active_locations, view)
 
+# Update the toggle_location route to use the default locations from settings
 @rt("/toggle_location/{year}/{month}/{location}")
-def get(year: int, month: int, location: str, locations: str = 'London+Online', view: str = 'calendar'):
+def get(year: int, month: int, location: str, locations: str = None, view: str = 'calendar'):
+    if locations is None:
+        default_locations = '+'.join(custom_settings.get('default_locations', ['Online', 'London']))
+        locations = default_locations
     active_locations = set(locations.replace('+', ' ').split())
     if location in active_locations:
         active_locations.remove(location)
@@ -425,10 +435,10 @@ def get(id: int):
             H3(event.title),
             P(f"Date: {event.date}"),
             P(f"Location: {event.location}"),
-            P(event.description),
+            Div(event.description, cls="marked"),  # Add the "marked" class to render as Markdown
             event_url
         ),
-        create_footer()  # Add the footer here
+        create_footer()
     ))
 
 
