@@ -98,7 +98,8 @@ app, rt = fast_app(pico=True,
     MarkdownJS(),
     HighlightJS(langs=['python', 'javascript', 'html', 'css']),
     Script(src="https://unpkg.com/@phosphor-icons/web"),
-    styles
+    styles,
+    Link(rel="alternate", type="application/rss+xml", title="Calendar Events", href="/rss")
 ))
 
 
@@ -153,7 +154,8 @@ def generate_rss_feed():
     fg.description('Upcoming events from our calendar')
     fg.link(href=custom_settings['website_url'])
 
-    upcoming_events = get_upcoming_events(days=30)
+    # Change this line
+    upcoming_events = get_upcoming_events(end_date=datetime.now().date() + timedelta(days=30))
     for event in upcoming_events:
         fe = fg.add_entry()
         fe.title(event.title)
