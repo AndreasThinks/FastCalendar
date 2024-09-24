@@ -107,7 +107,7 @@
 
     Couples get a 20% discount on tickets!
   url: https://example.com/cybersecurity-ai
-  location: New York
+  location: New-York
 
 - title: Green AI Symposium
   date: 2026-04-22
@@ -123,7 +123,7 @@
 
     *Lunch will be served with locally-sourced, organic ingredients.*
   url: https://example.com/green-ai-symposium
-  location: San Francisco
+  location: San-Francisco
 
 - title: AI in Finance Conference
   date: 2026-07-10
@@ -141,7 +141,7 @@
   location: Singapore
 
 - title: Future of Work - AI and Automation
-  date: 2026-10-01
+  date: 2025-10-01
   description: |
     # The Future of Work: AI and Automation
 
