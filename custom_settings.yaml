@@ -1,11 +1,11 @@
-title: Tech for Good Events
+title: AI for Good UK Events
 about_content: |
 
-  This is a calendar of events for the Tech for Good community in the UK.
+  This is a calendar of events relating to "AI for Good" in and around the UK. We also have a new Discord community which you can access by clicking the icon below.
 
   ## Submit an event:
   To submit an event, click the "Add Event" button. Add  you event details and create a PR.
-website_url: https://tech-for-good.events/
+website_url: https://ai-for-good.events/
 github_url: https://github.com/AndreasThinks/FastCalendar/edit/tech-for-good-events/events.yaml
 default_locations:
   - Online
@@ -13,7 +13,7 @@ default_locations:
 social_links:
   - name: Discord
     icon: discord-logo
-    url: hhttps://discord.gg/KUy8cB2t
+    url: https://discord.gg/KUy8cB2t
   - name: RSS Feed
     icon: rss-simple
     url: /rss
