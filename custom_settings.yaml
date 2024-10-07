@@ -1,27 +1,19 @@
-title: FastCalendar
+title: AI for Good UK Events
 about_content: |
 
-  This is a **calendar application** designed to help you keep track of important events and meetings.
+  This is a calendar of events relating to "AI for Good" in and around the UK. We also have a new Discord community which you can access by clicking the icon below.
 
-  ## Features:
-  - Easy-to-use interface
-  - Multiple view options (calendar and agenda)
-  - Location filtering
-  - RSS feed support
-
-  For more information, visit our [GitHub repository](https://github.com/your-repo/calendar-app).
-website_url: https://example.com
-github_url: https://github.com/your-repo/path-to-create-pr
+  ## Submit an event:
+  To submit an event, click the "Add Event" button. Add  you event details and create a PR.
+website_url: https://ai-for-good.events/
+github_url: https://github.com/AndreasThinks/FastCalendar/edit/tech-for-good-events/events.yaml
 default_locations:
   - Online
   - London
 social_links:
-  - name: Twitter
-    icon: twitter-logo
-    url: https://twitter.com/your_account
-  - name: GitHub
-    icon: github-logo
-    url: https://github.com/your_account
+  - name: Discord
+    icon: discord-logo
+    url: https://discord.gg/KUy8cB2t
   - name: RSS Feed
     icon: rss-simple
     url: /rss
