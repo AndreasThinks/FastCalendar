@@ -1,8 +1,6 @@
 # FastCalendar
 
-This is a web-based calendar application built with FastHTML, providing an interactive and customizable event viewing experience.
-
-It is primarily intended to be deployed directly from a Github repository, allowing event submission via PR.
+FastCalendar is a lightweight, customizable web-based calendar application built with FastHTML. It's designed to be easily deployed directly from a GitHub repository, allowing event submissions via Pull Requests. This makes it ideal for community-driven event calendars or personal event tracking.
 
 A live version can be viewed at https://tech-for-good.events/
 
@@ -16,6 +14,14 @@ A live version can be viewed at https://tech-for-good.events/
 - Social media links integration
 - Static logo display
 - Markdown support for event descriptions and about section
+- Easy event submission via GitHub Pull Requests
+
+## Technology Stack
+
+- Python 3.11+
+- FastHTML
+- SQLite
+- YAML for configuration and event data
 
 ## Prerequisites
 
@@ -119,6 +125,43 @@ A live version can be viewed at https://tech-for-good.events/
 - Modify the `custom_settings.yaml` file to change the application title, about content, website URL, GitHub URL, default locations, and social media links.
 - Edit the `events.yaml` file to add, remove, or modify events. Event descriptions support Markdown formatting.
 - Replace the `logo.png` file in the `static` folder to change the application logo.
+
+## Deployment
+
+FastCalendar is designed to be deployed directly from a GitHub repository. You can use services like Vercel, Netlify, or GitHub Pages for easy deployment. Specific deployment instructions will depend on your chosen platform.
+
+## Submitting Events
+
+To submit a new event:
+
+1. Fork the repository
+2. Add your event to the `events.yaml` file
+3. Create a Pull Request with your changes
+
+The repository maintainer will review and merge your PR, updating the calendar.
+
+## Updating the Application
+
+To update the application or event data:
+
+1. Pull the latest changes from the main repository
+2. Update your `custom_settings.yaml` or `events.yaml` as needed
+3. Redeploy your application
+
+## Current Limitations
+
+- Location names: The current version of FastCalendar only supports single-word location names. Multi-word location names may not function correctly for filtering and display purposes. We're working on improving this in future updates.
+
+## Troubleshooting
+
+If you encounter any issues:
+
+- Ensure all dependencies are correctly installed
+- Check that your `custom_settings.yaml` and `events.yaml` files are correctly formatted
+- Verify that your Python version is 3.11 or higher
+- Remember that location names should be single words
+
+For more help, please open an issue on the GitHub repository.
 
 ## Contributing
 
